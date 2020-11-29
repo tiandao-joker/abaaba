@@ -1,0 +1,137 @@
+{% extends 'base_index_comedy.html' %}
+
+{% load staticfiles %}
+
+{% block title %}<title>小破站-个人中心</title>{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/userinfo.css' %}">{% endblock css %}
+{% block body %}
+    <div class="container main_con clearfix">
+        <div class="left_menu_con clearfix">
+            <h3>个人中心</h3>
+            <a href=""><img src="{% static 'images/head_like.jpeg' %}"></a>
+            <ul>
+                <li><a href="{% url 'user:userown' %}">个人信息</a></li>
+                <li><a href="{% url 'user:uservip' %}">我的会员</a></li>
+                <li><a href="{% url 'user:userorder' 1 %}" class="active">我的订单</a></li>
+                <li><a href="{% url 'user:userinfo' 1 %}">浏览记录</a></li>
+            </ul>
+        </div>
+
+        {#    用户中心右侧内容的块    #}
+        <div class="right_content clearfix">
+            {% csrf_token %}
+            <h3 class="common_title2">我的订单</h3>
+            <div class="has_view_list">
+                <ul class="goods_type_list clearfix">
+
+                    <table style="position: relative;left: -170px; top: 20px;" width="895" border="1"
+                           bordercolor="#003399">
+                        <thead>
+                        <tr style="height: 60px" align="center">
+                            <td>订单id</td>
+                            <td>支付方式</td>
+                            <td>开通时长</td>
+                            <td>价格</td>
+                            <td>订单状态</td>
+                            <td>支付</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for order in orders %}
+                            <tr style="height: 60px" align="center">
+                                <th style=" text-align: center">{{ order.order_id }}</th>
+                                <td>{{ order.pay_name }}</td>
+                                <td>{{ order.total_count }} 天</td>
+                                <td>￥{{ order.total_price }}</td>
+                                <td>{{ order.status_name }}</td>
+                                {% if order.order_status == 1 %}
+                                    <td>
+                                        {% csrf_token %}
+                                        <button class="pay" order_id={{ order.order_id }}  order_count={{ order.total_count }}>去支付</button>
+                                    </td>
+                                {% else %}
+                                    <td>
+                                        <button class="pay "></button>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                            </tbody>
+                            </table>
+
+                </ul>
+                <div class="pagenation">
+                    <ul style="width: 960px">
+                        {% if order_page.has_previous %}
+                            <a class="frist" href="{% url 'user:userorder' order_page.previous_page_number %}">前一页</a>
+                        {% endif %}
+                        {% for pindex in pages %}
+                            {% if pindex == order_page.number %}
+                                <a style="color: #00a1d6;" href="{% url 'user:userorder' pindex %}">{{ pindex }}</a>
+                            {% else %}
+                                <a href="{% url 'user:userorder' pindex %}">{{ pindex }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        {% if movie_page.has_next %}
+                            <a class="last" href="{% url 'user:userorder' order_page.next_page_number %}">下一页</a>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(".remove").on("click", function (res) {
+            res.preventDefault(); // 使a自带的方法失效
+            csrf = $("input[name='csrfmiddlewaretoken']").val();
+            $.ajax({
+                url: "{% url 'user:userinfo' 1 %}",
+                type: "POST",
+                data: {"csrfmiddlewaretoken": csrf},
+                dataType: "json",
+                success: function () {
+                    window.location.reload()
+                },
+                error: function () {
+                    window.location.reload()
+                }
+            })
+        });
+
+        $(".pay").mouseover(function (res) {
+            $(this).addClass("bu");
+        });
+        $(".pay").mouseout(function (res) {
+            $(this).removeClass("bu");
+        });
+
+        $(".pay").click(function (res) {
+            order_id = $(this).attr("order_id");
+            order_count = $(this).attr("order_count");
+            csrf_token = $("input[name='csrfmiddlewaretoken']").val();
+            // 组织参数
+            console.log(order_id);
+            params = {"order_id": order_id, "csrfmiddlewaretoken": csrf_token,"order_count":order_count};
+            $.post("/order/pay/", params, function (data) {
+                if (data.res == 0) {
+                    //  引导用户进入支付界面
+                    window.open(data.pay_url);
+                    // 浏览器访问/order/check获取支付交易的结果
+                    $.post("/order/check/", params, function (data) {
+                        if(data.res == 0){
+                            location.reload()
+                        }else {
+                            alert(data.errmsg)
+                        }
+                    })
+
+                } else {
+                    alert(data.errmsg)
+                }
+            })
+        });
+
+
+    </script>
+{% endblock body %}

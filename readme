@@ -1,0 +1,239 @@
+本项目采用重量级框架django1.8.2版本设计而成，
+项目中采用的优化手段：
+    1. celery异步程序执行技术
+    2. redis数据缓存技术
+    3. fastdfs分布式数据存储技术
+    4. 全局搜索引擎框架--jieba分词技术
+    5. mysql读写分离技术
+    6. nginx配合uwsgi实现的负载均衡技术 -- 三种轮询算法中采用的默认轮询算法
+
+
+项目心得：
+    1. 本次项目小组分工明确，两名开发人员+一名ui设计人员+一名前端设计
+    2. 因为本次项目是毕业后的第一次自己动手开发设计，所以会存在诸多不足与缺点，后期慢慢改正
+    3. 在项目的进行过程中，因为涉及到多人开发、团队合作，所以在有些事情的决策上，多人的智慧会碰撞出不一样的火花
+    4. 在项目的进行过程中，认识到代码注释的重要性以及代码命名格式规范的重要
+
+
+接口文档:
+movies:
+    1.首页:
+        url : http://127.0.0.1:8000/
+        method : GET
+        请求参数:
+        返回参数:
+            参数:                     参数说明:
+            user_info                       用户信息
+            types                           视频的种类
+            movies_banners                  首页轮播图数据
+            top_movies                      首页视频数据
+            featured_movies                 根据播放量排序的视频数据
+            rating_movies                   根据评论量排序的视频数据
+            recrnt_movies                   根据上传时间排序的视频数据
+
+    2.视频分类:
+        url : http://127.0.0.1:8000/comedy/subject/page/
+        method : GET
+        请求参数:
+            subject                         视频类型
+            page                            显示页数
+
+        返回参数:
+            参数:                     参数说明:
+            user_info                       用户信息
+            types                           视频的种类
+            subject                         分类详情页
+            movie_page                      页数
+
+    3.视频详情页:
+        url : http://127.0.0.1:8000/single/movie_id/set_id/
+        method : GET
+        请求参数:
+            movie_id                        视频id
+            set_id                          视频集数
+        返回参数:
+            参数:                     参数说明:
+            types                           视频的种类
+            movie                           视频信息
+            user_info                       用户信息
+            sets                            视频播放参数
+            comments                        评论信息
+            movie_id,                       视频id
+            set_id                          视频集数
+
+    4.更新当前评论:
+        url : http://127.0.0.1:8000/single/movie_id/set_id/
+        method : POST
+        请求参数:
+            movie_id                        视频id
+            set_id                          视频集数
+        返回参数:
+            参数:                     参数说明:
+            comments                        当前评论信息
+
+
+
+order
+    1.开通会员:
+        url : http://127.0.0.1:8000/order/openvip/
+        method : GET
+        请求参数:
+        返回参数:
+            参数:                     参数说明:
+            content                         视频种类
+
+    2.创建订单:
+        url : http://127.0.0.1:8000/order/commit/
+        method : POST
+        请求参数:
+        返回参数:
+            参数:                     参数说明:
+            res                             状态码, 0表示成功
+            errmsg                          提示信息
+
+    3.支付功能:
+        url : http://127.0.0.1:8000/order/pay/
+        method : POST
+        请求参数:
+        返回参数:
+            参数:                     参数说明:
+            res                             状态码, 0表示成功
+            errmsg                          提示信息
+            pay_url                         支付链接
+
+    4.查询支付交易结果:
+        url : http://127.0.0.1:8000/order/check/
+        method : POST
+        请求参数:
+        返回参数:
+            参数:                     参数说明:
+            res                             状态码, 0表示成功
+            errmsg                          提示信息
+
+
+user
+    1.登录:
+        url : http://127.0.0.1:8000/user/login/
+        method : GET
+        请求参数:
+        返回参数:
+            参数:                     参数说明:
+            username                         用户名
+            checked                          记住用户名
+
+    2.登录校验:
+        url : http://127.0.0.1:8000/user/login/
+        method : POST
+        请求参数:
+        返回参数:
+            参数:                     参数说明:
+            msg                             错误说明
+
+
+    3.注册:
+        url : http://127.0.0.1:8000/user/login/
+        method : POST
+        请求参数:
+        返回参数:
+            参数:                     参数说明:
+            msg                             错误说明
+
+    4.用户激活:
+        url : http://127.0.0.1:8000/user/active/(?P<token>.*)/
+        method : POST
+        请求参数:
+            token                       加密字段
+        返回参数:
+
+    5.忘记密码:
+        url : http://127.0.0.1:8000/user/forgetpwd/
+        method : POST
+        请求参数:
+        返回参数:
+            参数:                     参数说明:
+            msg                             错误说明
+
+    6.修改密码:
+        url : http://127.0.0.1:8000/user/updata/token/
+        method : GET
+        请求参数:
+            token                       加密字段
+        返回参数:
+            参数:                     参数说明:
+            user_id                          用户id
+
+        method : POST
+        请求参数:
+            token                       加密字段
+        返回参数:
+            参数:                     参数说明:
+            msg                             错误说明
+
+    7.修改密码成功:
+        url : http://127.0.0.1:8000/user/updatasucc/
+        method : GET
+        请求参数:
+        返回参数:
+
+    8.退出登录:
+        url : http://127.0.0.1:8000/user/logout/
+        method : GET
+        请求参数:
+        返回参数:
+
+    9.浏览记录:
+        url : http://127.0.0.1:8000/user/userinfo/page/
+        method : GET
+        请求参数:
+            page                       页数
+        返回参数:
+            参数:                     参数说明:
+            user_info                       用户信息
+            types                           视频的种类
+            movies_li                       视频集合
+            user                            当前登录的用户
+            movie_page                      分页
+            page                            当前页面
+
+        清空记录
+        method : POST
+        请求参数:
+            page                       页数
+        返回参数:
+
+    10.会员页面:
+        url : http://127.0.0.1:8000/user/uservip/
+        method : GET
+        请求参数:
+        返回参数:
+            参数:                     参数说明:
+            user_info                       用户信息
+            types                           视频的种类
+            vip_time_end                    会员过期时间
+
+    11.个人信息:
+        url : http://127.0.0.1:8000/user/userown/
+        method : GET
+        请求参数:
+        返回参数:
+            参数:                     参数说明:
+            user_info                       用户信息
+            types                           视频的种类
+
+    11.用户订单:
+        url : http://127.0.0.1:8000/user/userorder/page/
+        method : GET
+        请求参数:
+            page                       页数
+        返回参数:
+            参数:                     参数说明:
+            orders                          订单信息
+            types                           视频的种类
+            pages                           分页
+            order_page                      分页实例对象
+
+
+
+
+
+

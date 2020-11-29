@@ -1,0 +1,347 @@
+{% extends "base_index_comedy.html" %}
+{% load staticfiles %}
+
+{% block title %}<title>{{ movie.name }}</title>{% endblock title %}
+{% block body %}
+    <!-- single -->
+    <div class="single-page-agile-main">
+        <div class="container">
+            <!-- /w3l-medile-movies-grids -->
+            <div class="agileits-single-top">
+                <ol class="breadcrumb">
+                    <li><a href="{% url 'movies:index' %}">首页</a></li>
+                    <li class="active">{{ movie.type }}</li>
+                </ol>
+            </div>
+            <div class="single-page-agile-info">
+                <!-- /movie-browse-agile -->
+                <div class="show-top-grids-w3lagile">
+                    <div class="col-sm-9 single-left">
+                        <div class="song active">
+                            <noscript>
+                                <strong>We're sorry but soucecode doesn't work properly without JavaScript enabled.
+                                    Please enable it to continue.</strong>
+                            </noscript>
+                            <!-- 设置视频插件容器 -->
+                            <div id="videoContainer"></div>
+                            <script type="text/javascript" src="{% static 'js/superVideo.js' %}"></script>
+                            <script>
+                                /* 以下将定义视频插件常用的几个控件 */
+                                // 实例化一个“下一个”按钮控件
+                                var nextControl = new Super.NextControl();
+                                // 实例化一个倍速控件
+                                var Dbspeen = new Super.DbspeenControl();
+                                // 实例化一个弹幕输入框控件
+                                var BarrageControl = new Super.BarrageControl();
+                                // 实例化一个全屏按钮控件
+                                var fullScreenControl = new Super.FullScreenControl();
+                                // 实例化视频播放资源
+
+                                {% if user.is_staff %}
+                                    var source = new Super.VideoSource({
+                                        // type: 视频类型 mp4:可播放浏览器支持的常见格式的视频文件(mp4/ogg/webm) m3u8: 可播放Hls形式推流直播视频(***.m3u8) flv: 可播放flv视频
+                                        // src: 视频路径，可以是本地路径亦可是网络路径
+                                        type: 'mp4',
+                                        src: '{{ movie.movie_file.url }}'
+                                    });
+                                {% else %}
+                                    {% if movie.status %}
+                                       source = new Super.VideoSource({
+                                            // type: 视频类型 mp4:可播放浏览器支持的常见格式的视频文件(mp4/ogg/webm) m3u8: 可播放Hls形式推流直播视频(***.m3u8) flv: 可播放flv视频
+                                            // src: 视频路径，可以是本地路径亦可是网络路径
+                                            type: 'mp4',
+                                            src:  '{{ movie.movie_file.url }}'
+                                    });
+                                        {% else %}
+                                        source = new Super.VideoSource({
+                                            // type: 视频类型 mp4:可播放浏览器支持的常见格式的视频文件(mp4/ogg/webm) m3u8: 可播放Hls形式推流直播视频(***.m3u8) flv: 可播放flv视频
+                                            // src: 视频路径，可以是本地路径亦可是网络路径
+                                            type: 'mp4',
+                                            src: 'https://blz-videos.nosdn.127.net/1/OverWatch/AnimatedShots/Overwatch_AnimatedShot_Winston_Recall.mp4'
+                                    });
+                                        {% endif %}
+                                {% endif %}
+
+                                /* 插件的常用配置参数 */
+                                var config = {
+                                    // 是否自动播放（该功能受限于浏览器安全策略，可能会失效，解决思路为初始化时设置为静音，加载完毕后取消静音）
+                                    autoplay: false,
+                                    currentTime: 0, // 设置视频初始播放时间，单位为秒
+                                    loop: false, // 是否循环播放
+                                    muted: false, // 是否默认静音
+                                    playbackRate: 1, // 视频默认播放速度
+                                    poster: '', // 视频首帧图片路径
+                                    volume: 0.5, // 视频默认音量 0-1
+                                    showPictureInPicture: true, // 是否启用画中画模式按钮（>=Chrome10有效）
+                                    source: source, // 为视频插件设置资源
+                                    leftControls: [nextControl], // 在底部控件栏左侧插入 “下一个”按钮控件
+                                    rightControls: [Dbspeen, fullScreenControl], // 在底部控件栏左侧插入 “倍速” 控件和 “全屏” 控件
+                                    centerControls: [BarrageControl] // 在底部控件栏中间插入 “弹幕输入控件”
+                                };
+
+                                //初始化插件superVideo('videoContainer')请对应好html中的插件容器id.
+                                var video = new Super.Svideo('videoContainer', config);
+
+                                /* 以下是控件类常用的监听事件 */
+
+                                // 监听“下一个”按钮控件点击事件
+                                nextControl.addEventListener('click', function (event) {
+                                    alert('click next menu !!!')
+                                });
+                                // 监听进入全屏模式后触发（点击进入全屏按钮）
+                                fullScreenControl.addEventListener('fullscreen', function (event) {
+                                    document.documentElement.style.overflowY = 'hidden';
+                                });
+                                // 监听退出全屏模式后触发（点击退出全屏按钮）
+                                fullScreenControl.addEventListener('cancelfullscreen', function (event) {
+                                    document.documentElement.style.overflowY = 'scroll';
+                                    console.log('cancel fullscreen !!!')
+                                });
+                                // 监听发送弹幕输入框输入并发送弹幕后触发
+                                BarrageControl.addEventListener('send', function (event) {
+                                    var value = event.target.option.value;
+                                    console.log('send ' + value)
+                                });
+
+                                /* 以下是video类常用的监听事件 */
+                                // 视频准备就绪
+                                video.addEventListener('ready', function () {
+                                    console.log('is ready!')
+                                });
+                                // 开始播放
+                                video.addEventListener('play', function () {
+                                    console.log('is play!')
+                                });
+                                // 暂停播放
+                                video.addEventListener('pause', function () {
+                                    console.log('is pause!')
+                                });
+                                // 监听进入全屏模式后触发
+                                video.addEventListener('fullscreen', function (event) {
+                                    document.documentElement.style.overflowY = 'hidden';
+                                    console.log('is fullscreen !!!')
+                                });
+                                // 监听退出全屏模式后触发
+                                video.addEventListener('cancelfullscreen', function (event) {
+                                    document.documentElement.style.overflowY = 'scroll';
+                                    console.log('cancel fullscreen !!!')
+                                });
+
+                                /* 下面将演示弹幕类的用法 */
+
+                                // 初始化一个弹幕实例
+                                var barrage1 = new Super.Barrage('我是一条红色的超大号字体弹幕', {
+                                    color: 'red',
+                                    fontSize: 30
+                                });
+                                // 将该弹幕加入播放器插件
+                                video.addBarrage(barrage1);
+
+                                // 还可以在弹幕中插入一些dom节点
+                                var vipDom = document.createElement('span');
+                                vipDom.innerHTML = 'V';
+                                vipDom.style.color = 'green';
+                                vipDom.style.fontSize = '20px';
+                                vipDom.style.fontWeight = '600';
+                                vipDom.style.marginRight = '4px';
+                                var barrage2 = new Super.Barrage('我是超级会员VIP', {
+                                    color: 'orange',
+                                    fontSize: 15,
+                                    leftDom: vipDom // 将DOM插入弹幕左侧
+                                });
+                                video.addBarrage(barrage2);
+
+                                // 当然也可以这样简单的使用
+                                video.addBarrage('冲鸭~~~~~~');
+                                video.addBarrage('奥里给！！！！！！');
+
+                                $(".sv-control").onblur = function () {
+                                    $(this).addClass("activity")
+                                };
+
+                                $(".sv-control").onfocus = function () {
+                                    $(this).removeClass("activity")
+                                }
+
+
+                                /*
+                                  说在最后：
+                                  superVideo还有许多实用的方法/事件/属性，想深入使用的请参考API文档 —— https://hulalalalala.github.io/superVideo/api/index.html
+                                  开源不易，希望各位爱心人士点个STAR支持以下 —— https://github.com/hulalalalala/superVideo
+                                */
+                            </script>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 single-right">
+                        <h5 style="font-size: 17px">{{ movie.name }}</h5>
+                        <div class="clearfix"></div>
+                        <div class="all-comments-info">
+                            <div class="agile-info-wthree-box mystyle">
+                                <ul>
+                                    {% for i in sets %}
+                                        <li><a href="{% url 'movies:single' movie.id i.index %}">第{{ i.index }}集</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 single-left">
+
+
+                    <div class="all-comments">
+                        <div class="all-comments-info">
+                            <a href="#">视频信息</a>
+                            <div class="agile-info-wthree-box" style="position: relative">
+                                <img style="width: 91px; height: 134px;position: relative;top:-10px;"
+                                     src="{{ movie.cover_image.url }}">
+                                <span style="display: inline-block;width: 980px;font-size: 14px; color: #9E9E9E;">
+                                        <p style="color: #9E9E9E;position: relative;top: -10px;">简介：</p>
+                                        {{ movie.desc }}
+                                    </span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="all-comments-info">
+                            <a href="#">评论</a>
+                            <div class="agile-info-wthree-box">
+
+                                    {% csrf_token %}
+{#                                    <input type="hidden" class="movie_id" value="{{ movie_id }}">#}
+{#                                    <input type="hidden" class="set_id" value="{{ set_id }}">#}
+                                    <textarea class="comment" placeholder="快把你的想法写出来吧(｀・ω・´)~~~~" required=""></textarea>
+                                    <input class="send-comments" type="button" value="发送">
+                                    <div class="clearfix"></div>
+
+                            </div>
+                        </div>
+                        <div class="media-grids">
+                            <div class="media">
+
+                                <div class="media-body" >
+                                    {% if comments %}
+                                        {% for comment in comments%}
+                                            <div class="media-little-body">
+                                                <p class="comment-user">{{ comment.user_id.username }}</p>
+                                                <p class="comment-info">{{ comment.comment }}</p>
+                                                <p class="comment-time">{{ comment.create_time }}</p>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>这个视频还没有评论,快来说点什么吧~</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <!-- //movie-browse-agile -->
+            <!--body wrapper start-->
+
+            <!--body wrapper end-->
+
+
+        </div>
+        <!-- //w3l-latest-movies-grids -->
+    </div>
+    <!-- //w3l-medile-movies-grids -->
+
+{#    发送评论    #}
+<script src="{% static 'js/jquery.form.min.js' %}"></script>
+<script type="text/javascript">
+
+        $(".send-comments").click(function (e) {
+            {#e.preventDefault(); // 阻止浏览器的默认行为#}
+            csrf = $("input[name='csrfmiddlewaretoken']").val();
+            comment = $(".comment").val();
+            console.log(comment);
+            movie_id = $(".movie_id").val();
+            set_id = $(".set_id").val();
+            $.ajax({
+                url: "{% url 'movies:single' movie_id set_id %}",
+                type:"POST",
+                data:{"csrfmiddlewaretoken":csrf, "comment":comment},
+                dataType:"json",
+                success:function (res) {
+                    console.log(res);
+                    if (res.errno == 1) {
+                        $(".comment").val("");
+                        var aa = $(".media-body p").text();
+                        {#console.log(aa)#}
+                        if (aa == "这个视频还没有评论,快来说点什么吧~") {
+                            var strname = '<p class="comment-user">' + res.comments[0].username +'</p>';
+                            var strinfo = '<p class="comment-info">' + res.comments[0].comment_one +'</p>';
+                            var strtime = '<p style="border-bottom: 1px #cccccc solid;" class="comment-time">' + res.comments[0].create_time +'</p>';
+                            var str = strname + strinfo + strtime;
+                            $(".media-body").html(str);
+                        }else {
+                            var strname = '<p class="comment-user">' + res.comments[0].username +'</p>';
+                            var strinfo = '<p class="comment-info">' + res.comments[0].comment_one +'</p>';
+                            var strtime = '<p class="comment-time">' + res.comments[0].create_time +'</p>';
+                            var str = strname + strinfo + strtime;
+                            $(".media-body").prepend(str);
+                        }
+
+                        {#console.log(res.comments[0].comment_one)#}
+
+                        {#$(".media-body").insertBefore("0000")#}
+                    }
+
+                }
+            })
+
+        });
+        {#$(".send-comments").on("click",function(e){#}
+            {#e.preventDefault();#}
+        {#    csrf = $("input[name='csrfmiddlewaretoken']").val();#}
+        {#    comment = $(".comment").val();#}
+        {#    console.log(comment);#}
+        {#    movie_id = $(".movie_id").val();#}
+        {#    set_id = $(".set_id").val();#}
+        {#    $.ajax({#}
+        {#        url: "{% url 'movies:single' movie_id set_id %}",#}
+        {#        type:"POST",#}
+        {#        data:{"csrfmiddlewaretoken":csrf, "comment":comment},#}
+        {#        dataType:"json",#}
+        {#        success:function (res) {#}
+                    {#res.preventDefault();#}
+                    {#$.ajax({#}
+                    {#    url: "{% url 'movies:single' movie_id set_id%}",#}
+                    {#    type:"GET",#}
+                    {#    data:{"csrfmiddlewaretoken":csrf},#}
+                    {#    dataType:"json",#}
+                    {#    success:function (res) {#}
+                    {#        $(".media-body p").remove();#}
+                    {#        for (var i=0; i < res.comments.length; i++) {#}
+                    {#            var str = "<p>" + res.comments.comment +"</p>";#}
+                    {#            $(".media-body").append(str)#}
+                    {#        }#}
+                    {##}
+                    {#    }#}
+        {#            //});#}
+                    {#$(".media-body").html();#}
+        {#            console.log(res);#}
+        {#            if (res.errno == 1) {#}
+        {#                for (var i=0; i < res.comments.length; i++) {#}
+        {#                var str = "<p>" + res.comments.comment_one +"</p>";#}
+        {#                $(".media-body").append(str)#}
+        {#                }#}
+        {#            }else {#}
+        {#                alert("aaaaaa")#}
+        {#            }#}
+        {##}
+        {#        }#}
+        {#    })#}
+        //})
+
+
+</script>
+
+{% endblock body %}

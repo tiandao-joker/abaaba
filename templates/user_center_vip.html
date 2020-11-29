@@ -1,0 +1,68 @@
+{% extends 'base_index_comedy.html' %}
+
+{% load staticfiles %}
+
+{% block title %}<title>小破站-个人中心</title>{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/userinfo.css' %}">{% endblock css %}
+{% block body %}
+    <div class="container main_con clearfix">
+        <div class="left_menu_con clearfix">
+            <h3>个人中心</h3>
+            <a href=""><img src="{% static 'images/head_like.jpeg' %}"></a>
+            <ul>
+                <li><a href="{% url 'user:userown' %}">个人信息</a></li>
+                <li><a href="{% url 'user:uservip' %}" class="active">我的会员</a></li>
+                <li><a href="{% url 'user:userorder' 1 %}">我的订单</a></li>
+                <li><a href="{% url 'user:userinfo' 1 %}">浏览记录</a></li>
+            </ul>
+        </div>
+
+        {#    用户中心右侧内容的块    #}
+        <div class="right_content clearfix">
+            <h3 class="common_title2">我的会员</h3>
+            {% if user.is_staff %}
+                <div class="xufei_vip">
+                <ul class="xufei_vip_list">
+                    <li class="col-md-4" style="text-align: center;margin-top: 50px;border-right: 1px solid #ccc;"><span>VIP到期时间</span><h3 style="margin-top: 20px;color: red">{{ vip_time_end }}</h3></li>
+                    <li class="col-md-5" style="margin-top: 70px;margin-left: 40px;"><a href="{% url 'order:openvip' %}" style="">立即续费</a></li>
+                    <li class="clearfix">您的特权</li>
+                    <li><hr style="width: 720px;"></li>
+                    <li>特权如下</li>
+                    <li>
+                        <ul class="privilege2">
+                            <li class="col-md-4"><img src="{% static 'images/head_like.jpeg' %}" alt=""><span>院线新片全覆盖</span></li>
+                            <li class="col-md-4"><img src="{% static 'images/head_like.jpeg' %}" alt=""><span>独家美剧免费看</span></li>
+                            <li class="col-md-4"><img src="{% static 'images/head_like.jpeg' %}" alt=""><span>远离广告无干扰</span></li>
+                            <li class="col-md-4"><img src="{% static 'images/head_like.jpeg' %}" alt=""><span>每月赠送观影票</span></li>
+                            <li class="col-md-4"><img src="{% static 'images/head_like.jpeg' %}" alt=""><span>1080P蓝光画质</span></li>
+                            <li class="col-md-4"><img src="{% static 'images/head_like.jpeg' %}" alt=""><span>尊贵身份亮起来</span></li>
+                        </ul>
+                    </li>
+                </ul>
+                </div>
+            {% else %}
+                <div class="zhuce_vip">
+                    <ul class="zhuce_vip_list">
+                        <li>成为会员</li>
+                        <li><hr></li>
+                        <li><a href="{% url 'order:openvip' %}">立即开通>></a></li>
+                        <li>VIP特权</li>
+                        <li><hr></li>
+                        <li>特权如下</li>
+                        <li>
+                            <ul class="privilege">
+                                <li><img src="{% static 'images/head_like.jpeg' %}" alt=""><span>院线新片全覆盖</span></li>
+                                <li><img src="{% static 'images/head_like.jpeg' %}" alt=""><span>独家美剧免费看</span></li>
+                                <li><img src="{% static 'images/head_like.jpeg' %}" alt=""><span>远离广告无干扰</span></li>
+                                <li><img src="{% static 'images/head_like.jpeg' %}" alt=""><span>每月赠送观影票</span></li>
+                                <li><img src="{% static 'images/head_like.jpeg' %}" alt=""><span>1080P蓝光画质</span></li>
+                                <li><img src="{% static 'images/head_like.jpeg' %}" alt=""><span>尊贵身份亮起来</span></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock body %}

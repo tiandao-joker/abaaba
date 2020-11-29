@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>注册</title>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/zhuce.css' %}"/>
+    <script type="text/javascript" src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/zhuce.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var height = $(document).height();
+            $('.main').css('height', height);
+        })
+    </script>
+</head>
+
+<body>
+<div class="main">
+    <div class="main0">
+        <div class="main_left">
+            <img src="{% static 'images/zhuce-image-3.png' %}" class="theimg"/>
+            <img src="{% static 'images/zhuce-image-2.png' %}" class="secimg"/>
+            <img src="{% static 'images/zhuce-image-1.png' %}" class="firimg"/>
+        </div>
+        <div class="main_right">
+            <div class="main_r_up">
+                <img src="{% static 'images/user.png' %}"/>
+                <div class="pp">注册</div>
+            </div>
+            <div class="sub"><p>已经注册？<a href="{% url 'user:login' %}"><span class="blue">请登录</span></a></p></div>
+            <div class="reg_form clearfix txt txt0">
+                <form method="post" action="/user/register/" id="reg_form">
+                    {% csrf_token %}
+                    <ul>
+                        <li>
+                            <label style="letter-spacing:8px;">用户名:</label>
+                            <input type="text" name="username" id="user_name" placeholder="昵称">
+                            <span class="error_tip">提示信息</span>
+                        </li>
+                        <li>
+                            <label style="letter-spacing:4px;">登录密码:</label>
+                            <input type="password" name="userpwd" id="pwd" placeholder="密码(8-20个字符组成，区分大小写)">
+                            <span class="error_tip">提示信息</span>
+                        </li>
+                        <li>
+                            <label style="letter-spacing:4px;">确认密码:</label>
+                            <input type="password" name="usercpwd" id="cpwd" placeholder="确认密码">
+                            <span class="error_tip">提示信息</span>
+                        </li>
+                        <li>
+                            <label style="letter-spacing:4px;">用户邮箱:</label>
+                            <input type="text" name="useremail" id="email" placeholder="常用邮箱">
+                            <span class="error_tip">提示信息</span>
+                        </li>
+                        <li class="agreement">
+                            <input type="checkbox" name="allow" id="allow" checked="checked">
+                            <label>同意”阿巴阿巴服务协议“</label>
+                            <span class="error_tip2">提示信息</span>
+
+                        </li>
+                        <li class="reg_sub">
+                            <input type="submit" value="注 册" name="">
+                        </li>
+                    </ul>
+                    <span>{{ msg }}</span>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="footer0">
+        <div class="footer_l">使用条款 | 隐私保护</div>
+        <div class="footer_r">© 2020 鲸图（石家庄）阿巴阿巴文化 有限 公司 冀ICP备0000166号</div>
+    </div>
+</div>
+</body>
+</html>

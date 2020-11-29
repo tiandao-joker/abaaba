@@ -1,0 +1,84 @@
+{% extends 'base_index_comedy.html' %}
+
+{% load staticfiles %}
+
+{% block title %}<title>小破站-个人中心</title>{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/userinfo.css' %}">{% endblock css %}
+{% block body %}
+    <div class="container main_con clearfix">
+        <div class="left_menu_con clearfix">
+            <h3>个人中心</h3>
+            <a href=""><img src="{% static 'images/head_like.jpeg' %}"></a>
+            <ul>
+                <li><a href="{% url 'user:userown' %}">个人信息</a></li>
+                <li><a href="{% url 'user:uservip' %}" class="active">我的会员</a></li>
+                <li><a href="{% url 'user:userorder' 1 %}">我的订单</a></li>
+                <li><a href="{% url 'user:userinfo' 1 %}">浏览记录</a></li>
+            </ul>
+        </div>
+
+        {#    用户中心右侧内容的块    #}
+        <div class="right_content clearfix">
+            <h3 class="common_title2">开通会员</h3>
+            <div class="open_vip_list">
+                <ul class="aui-cho-box">
+                    <li class="aui-flex on">
+                        <div class="aui-flex-time"><span>1年</span><em></em></div>
+                        <div class="aui-flex-box"><span>原价:<em>￥228</em></span></div>
+                        <div class="aui-flex-tag"><em>优惠:</em>￥190</div>
+                    </li>
+                    <li class="aui-flex">
+                        <div class="aui-flex-time"><span>6个月</span><em></em></div>
+                        <div class="aui-flex-box"><span>原价:<em>￥118</em></span></div>
+                        <div class="aui-flex-tag"><em>优惠:</em>￥105</div>
+                    </li>
+                    <li class="aui-flex">
+                        <div class="aui-flex-time"><span>3个月</span><em></em></div>
+                        <div class="aui-flex-box"><span>原价:<em>￥106</em></span></div>
+                        <div class="aui-flex-tag"><em>优惠:</em>￥101</div>
+                    </li>
+                    <li class="aui-flex">
+                        <div class="aui-flex-time"><span>1个月</span><em></em></div>
+                        <div class="aui-flex-box"><span><em></em></span></div>
+                        <div class="aui-flex-tag"><em></em>￥19</div>
+                    </li>
+                    {% if not user.is_staff %}
+                    <li class="aui-flex">
+                        <div class="aui-flex-time"><span>试用5天</span><em></em></div>
+                        <div class="aui-flex-box"><span><em></em></span></div>
+                        <div class="aui-flex-tag"><em></em>￥5</div>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="chi">
+                <div class="b-line on" value="1">
+                    <div class="aui-flex-wx"><img src="{% static 'images/icon-zfb.png' %}" alt=""></div>
+                    <div class="aui-flex-box aui-flex-box-clear">
+                        <h4>支付宝支付</h4>
+                        <p>亿万用户的选择，更快更安全</p>
+                    </div>
+                </div>
+                <div class="b-line" value="2">
+                    <div class="aui-flex-wx"><img src="{% static 'images/icon-wx.png' %}" alt=""></div>
+                    <div class="aui-flex-box aui-flex-box-clear">
+                        <h4>微信支付</h4>
+                        <p>亿万用户的选择</p>
+                    </div>
+                </div>
+            </div>
+            <div class="aui-member-get">
+                {% csrf_token %}
+                <input type="hidden">
+                {% if user.is_staff %}
+                    <button>￥190 续购权益</button>
+                {% else %}
+                    <button>￥190 购买权益</button>
+                {% endif %}
+            </div>
+
+
+        </div>
+    </div>
+{% endblock body %}

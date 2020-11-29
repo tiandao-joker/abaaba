@@ -1,0 +1,44 @@
+{% extends 'base_index_comedy.html' %}
+
+{% load staticfiles %}
+
+{% block title %}<title>小破站-个人中心</title>{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/userinfo.css' %}">{% endblock css %}
+{% block body %}
+    <div class="container main_con clearfix">
+        <div class="left_menu_con clearfix">
+            <h3>个人中心</h3>
+            <a href=""><img src="{% static 'images/head_like.jpeg' %}"></a>
+            <ul>
+                <li><a href="{% url 'user:userown' %}" class="active">个人信息</a></li>
+                <li><a href="{% url 'user:uservip' %}">我的会员</a></li>
+                <li><a href="{% url 'user:userorder' 1 %}">我的订单</a></li>
+                <li><a href="{% url 'user:userinfo' 1 %}">浏览记录</a></li>
+            </ul>
+        </div>
+
+        {#    用户中心右侧内容的块    #}
+        <div class="right_content clearfix">
+            <h3 class="common_title2">个人信息</h3>
+            <ul class="goods_type_list">
+                <li style="padding-top: 80px"><span style="font-size: 30px;">用户名：</span><span style="font-size: 28px; color: #58AFFF;">{{ user_info.username }}</span>&nbsp;&nbsp;<a href="{% url 'user:logout' %}">退出登录</a></li>
+            </ul>
+
+            <div class="liulan">
+                <h3 class="liulan-li">最近浏览</h3>
+                <a style="float: right; font-size: 15px; margin-top: 5px;" href="{% url 'user:userinfo' 1 %}">全部记录></a>
+                <ul class="goods_type_list liulan-one clearfix">
+                    {% for movie in movies_li %}
+                        <li style="width: 182px;">
+                            <a href="{% url 'movies:single' movie.id 1 %}"><img style="width: 182px; height: 235px; padding-right: 20px;" src="{{ movie.cover_image.url }}"></a>
+                            <h4 style="width: 170px; text-align: center"><a href="{% url 'movies:single' movie.id 1 %}">{{ movie.name }}</a></h4>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+
+        </div>
+    </div>
+{% endblock body %}

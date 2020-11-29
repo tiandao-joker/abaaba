@@ -1,0 +1,5 @@
+# 根据表中的哪些字段建立索引数据
+
+{{ object.name }}  # 根据视频名称建立索引
+{{ object.desc }}  # 根据视频的简介建立索引
+{{ object.movies.detail }}  # 根据视频的详情建立索引

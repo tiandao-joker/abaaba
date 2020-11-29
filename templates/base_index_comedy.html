@@ -1,0 +1,266 @@
+{#    index  comedy  contact  faq  genres  horror  icons  list  news  news-single  series  short-codes  single    #}
+
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+    {% block title %}<title>小破站-首页</title>{% endblock title %}
+    <!-- for-mobile-apps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content=""/>
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
+    <!-- //for-mobile-apps -->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <link rel="stylesheet" href="{% static 'css/contactstyle.css' %}" type="text/css" media="all"/>
+    <link rel="stylesheet" href="{% static 'css/faqstyle.css' %}" type="text/css" media="all"/>
+    <link href="{% static 'css/single.css' %}" rel='stylesheet' type='text/css'/>
+    <link href="{% static 'css/medile.css' %}" rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" href="{% static 'css/main-css.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'css/menu_two.css' %}">
+    {% block css %}{% endblock css %}
+    <!-- banner-slider -->
+    <link href="{% static 'css/jquery.slidey.min.css' %}" rel="stylesheet">
+    <!-- //banner-slider -->
+    <!-- pop-up -->
+    <link href="{% static 'css/popuo-box.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <!-- //pop-up -->
+    <!-- font-awesome icons -->
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}"/>
+    <!-- //font-awesome icons -->
+    <!-- js -->
+    <script type="text/javascript" src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+    <!-- //js -->
+    <!-- banner-bottom-plugin -->
+    <link href="{% static 'css/owl.carousel.css' %}" rel="stylesheet" type="text/css" media="all">
+    <script src="{% static 'js/owl.carousel.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $("#owl-demo").owlCarousel({
+
+                autoPlay: 3000, //Set AutoPlay to 3 seconds
+
+                items: 5,
+                itemsDesktop: [640, 4],
+                itemsDesktopSmall: [414, 3]
+
+            });
+
+        });
+    </script>
+    <!-- //banner-bottom-plugin -->
+    <!---<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>--->
+    <!-- start-smoth-scrolling -->
+    <script type="text/javascript" src="{% static 'js/move-top.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/easing.js' %}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1000);
+            });
+        });
+    </script>
+    <!-- start-smoth-scrolling -->
+</head>
+
+<body>
+<!-- header -->
+<div class="header">
+    <div class="container">
+        <div class="w3layouts_logo">
+            <img style="width: 200px" src="{% static 'images/1.jpg' %}">
+        </div>
+        <div class="w3_search">
+            <form action="/search" method="get">
+                <input type="text" name="q" placeholder="搜索" required="">
+                <input type="submit" value="搜索">
+            </form>
+        </div>
+        <div class="w3l_sign_in_register">
+            <ul class="menu">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'user:userown' %}">{{ user.username }}</a></li>
+                    <li><a href="{% url 'user:logout' %}">退出</a></li>
+                {% else %}
+                    <li><a href="{% url 'user:login' %}">登录</a></li>
+                    <li><a href="{% url 'user:register' %}">注册</a></li>
+                {% endif %}
+                <li><a href="{% url 'user:userown' %}">个人中心</a></li>
+                <li><a href="{% url 'user:userinfo' 1 %}">浏览记录</a></li>
+
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- nav -->
+<div class="movies_nav">
+    <div class="container">
+        <nav class="navbar navbar-default">
+            <div class="navbar-header navbar-left">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+                <nav>
+                    <ul class="nav navbar-nav">
+                        <li><a href="{% url 'movies:index' %}">首页</a></li>
+                        {% for type in types %}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ type.name }}<b
+                                        class="caret"></b></a>
+                                <ul class="dropdown-menu multi-column columns-3">
+                                    <li>
+
+                                        <div class="col-sm-12">
+                                            <ul class="multi-column-dropdown">
+                                                {% for subject in type.subjects %}
+                                                    <li>
+                                                        <a href="{% url 'movies:comedy' subject.id 1 %}">{{ subject.sku }}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- //nav -->
+{% block body %}{% endblock body %}
+<!-- footer -->
+<div style="background-image: url('{% static 'images/bgimage.jpg' %}');" class="footer">
+    <div class="container">
+        <div class="w3ls_footer_grid">
+
+            <div class="col-md-12 w3ls_footer_grid_right">
+                <img style="height: 100px;" src="{% static 'images/1.jpg' %}">
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="col-md-5 w3ls_footer_grid1_left">
+            <p>Copyright &copy; 2016.Company name All rights reserved.</p>
+        </div>
+        <div class="col-md-7 w3ls_footer_grid1_right">
+            <ul>
+                <li>
+                    <a href="">Contact Us</a>
+                </li>
+                <li>
+                    <a style="text-transform: lowercase" href="">abaaba@163.com</a>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- //footer -->
+<!-- Bootstrap Core JavaScript -->
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $(".dropdown").hover(
+            function () {
+                $('.dropdown-menu', this).stop(true, true).slideDown("fast");
+                $(this).toggleClass('open');
+            },
+            function () {
+                $('.dropdown-menu', this).stop(true, true).slideUp("fast");
+                $(this).toggleClass('open');
+            }
+        );
+    });
+</script>
+<!-- //Bootstrap Core JavaScript -->
+<!-- here stars scrolling icon -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        /*
+            var defaults = {
+            containerID: 'toTop', // fading element id
+            containerHoverID: 'toTopHover', // fading element hover id
+            scrollSpeed: 1200,
+            easingType: 'linear'
+            };
+        */
+
+        $().UItoTop({easingType: 'easeOutQuart'});
+
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".aui-flex").click(function (res) {
+            $(".aui-flex").removeClass("on");
+            $(this).addClass("on");
+            var val = $(".on .aui-flex-tag").text() + "购买权益";
+            var tt = $(".on .aui-flex-time").text();
+            $(".aui-member-get button").html(val);
+            $(".aui-member-get input").html(tt)
+        });
+
+        // 选中支付方式
+        $(".b-line").click(function (res) {
+            $(".b-line").removeClass("on");
+            $(this).addClass("on");
+        });
+
+
+        $(".aui-member-get").click(function () {
+            // 需要获取支付方式、购买的时间和支付的钱数
+            var order_time = $(".on .aui-flex-time").text();
+            var order_money = $(".on .aui-flex-tag").text();
+            var pay_method = $(".on.b-line").attr("value");
+            csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+            params = {
+                "order_time": order_time,
+                "order_money": order_money,
+                "csrfmiddlewaretoken": csrf_token,
+                "pay_method": pay_method
+            };
+            //  发起订单请求
+            $.post("/order/commit/", params, function (data) {
+                if (data.res == 0) {
+                    {#alert(data.errmsg)#}
+                    window.location.href = '{% url "user:userorder" 1 %}'
+                } else {
+                    alert(data.errmsg)
+                }
+            });
+
+
+        })
+
+    });
+</script>
+<!-- //here ends scrolling icon -->
+</body>
+</html>
+
+
+
+
+
+
+
+

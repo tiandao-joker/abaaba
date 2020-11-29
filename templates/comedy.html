@@ -1,0 +1,79 @@
+{#   分类电影详情   #}
+{% extends 'base_index_comedy.html' %}
+{% load staticfiles %}
+{% block title %}<title>{{ subject.sku }}</title>{% endblock title %}
+
+{% block body %}
+    <!-- comedy-w3l-agileits -->
+    <div class="wthree-comedy">
+        <!-- /w3l-medile-movies-grids -->
+        <div class="w3l-medile-movies-grids">
+            <!-- /movie-browse-agile -->
+            <div class="movie-browse-agile">
+                <!--/browse-agile-w3ls -->
+                <div class="browse-agile-w3ls general-w3ls">
+                    <div class="tittle-head">
+                        <h4 class="latest-text">{{ subject.sku }}类{{ subject.type }}</h4>
+                        <div class="container">
+                            <div class="agileits-single-top">
+                                <ol class="breadcrumb">
+                                    <li><a href="{% url 'movies:index' %}">首页</a></li>
+                                    <li class="active">{{ subject.sku }}类{{ subject.type }}</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <!-- /latest-movies1 -->
+                        <div class="browse-inner-come-agile-w3">
+                            {% for movie in movie_page %}
+                                <div class="col-md-2 w3l-movie-gride-agile">
+                                    <a href="{% url 'movies:single' movie.id 1 %}"
+                                       class="hvr-shutter-out-horizontal"><img
+                                            src="{{ movie.cover_image.url }}" title="album-name" alt=" "
+                                            style="width: 182px;height: 268px;"/>
+                                        <div class="w3l-action-icon"><i class="fa fa-play-circle"
+                                                                        aria-hidden="true"></i>
+                                        </div>
+                                    </a>
+                                    <div class="mid-1">
+                                        <div class="w3l-movie-text">
+                                            <h6><a href="{% url 'movies:single' movie.id 1 %}">{{ movie.name }}</a></h6>
+                                        </div>
+                                    </div>
+                                    <div class="ribben two">
+                                        <p>NEW</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="clearfix"></div>
+                        </div>
+                        <!-- //latest-movies1 -->
+                    </div>
+                </div>
+                <!--//browse-agile-w3ls -->
+                <div class="blog-pagenat-wthree">
+                    <ul>
+                        {% if movie_page.has_previous %}
+                            <li><a class="frist"
+                                   href="{% url 'movies:comedy' subject.id movie_page.previous_page_number %}">前一页</a>
+                            </li>
+                        {% endif %}
+                        {% for pindex in movie_page.paginator.page_range %}
+                            <li><a href="{% url 'movies:comedy' subject.id pindex %}">{{ pindex }}</a></li>
+                        {% endfor %}
+                        {% if movie_page.has_next %}
+                            <li><a class="last" href="{% url 'movies:comedy' subject.id movie_page.next_page_number %}">下一页</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <!-- //movie-browse-agile -->
+            <!--body wrapper start-->
+
+        </div>
+        <!-- //w3l-medile-movies-grids -->
+    </div>
+    <!-- //comedy-w3l-agileits -->
+{% endblock body %}
